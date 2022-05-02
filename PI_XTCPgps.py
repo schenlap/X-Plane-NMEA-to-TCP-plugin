@@ -97,8 +97,9 @@ class PythonInterface:
             after_count = threading.activeCount()
             self.CannotWrite = after_count - before_count
     
-            self.OutputFile.write(str(before_count) + '  ' + str(after_count) + '  ' + str(self.CannotWrite) + '\n')
+            self.OutputFile.write('Thread count before: ' + str(before_count) + ' after: ' + str(after_count) + ' CannotWrite: ' + str(self.CannotWrite) + '\n')
             self.LineCount = self.LineCount + 1
+            self.OutputFile.flush()
     
             # Locate data references for all communicated variables.
     
@@ -158,9 +159,9 @@ class PythonInterface:
     
                 return 10.0
     
-    #        self.where = 1
-    #        self.OutputFile.write('where?  ' + str(self.where) + '  ' + str(time.clock()) + '\n')
-    #            self.LineCount = self.LineCount + 1
+            #self.where = 1
+            #self.OutputFile.write('where?  ' + str(self.where) + '  ' + str(time.clock()) + '\n')
+            #self.LineCount = self.LineCount + 1
     
             # Get current values for communicated variables.
             self.Zulu_time = XPLMGetDataf(self.drZulu_time)  # sec since midnight
@@ -295,7 +296,7 @@ class PythonInterface:
             lxwp0 = '$' + lxwp0 + '*' + cks + '\r\n'  
     # -------------------    
     # -------------- test only ---------------------- 
-            #print "NMEA> " ,  lxwp0 , n_windspd #gprmc, gpgga, gpgsa,
+            #print("NMEA> " ,  lxwp0)
     
     #        serial write at 4800 baud can take .3 sec, so put in own thread;
             write_thread = threading.Thread(target=self.ser.write, args=(gprmc + gpgga + gpgsa + lxwp0,))
