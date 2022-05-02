@@ -1,5 +1,5 @@
 """
-PI_XTCPgps.py version 0.1 beta 1
+PI_XTCPgps.py version 0.1 beta 2
 copyright (c) 2009 Timor at cyhex; released under GPL 2.0 or later
 
 XTCPgps is a plugin for X-Plane. Based on Ed Park's XMAPgps, It sends these NMEA sentences
@@ -10,6 +10,7 @@ with XCsoar running on a Linux desktop.
 
 Alex Ferrer 2014: added LXWP0 NMEA sentence so Xsoar (for use with Xcsoar condor driver) 
                   can take advantage of vario, IAS and Wind info
+schenlap: modified for python3 X-Plane plugin
 """
 
 from XPLMProcessing import *
@@ -53,7 +54,7 @@ class SocketPlugin(object):
         try:
             self.s.connect(self.HOST)
             self.connected = True
-        except Exception, e:
+        except Exception as e:
             OutputFile.write(" Can not connect to NMEA Client on %s:%s %s \n" % (self.HOST[0],self.HOST[1], e))
             OutputFile.flush()
             self.connected = False
@@ -134,12 +135,12 @@ class PythonInterface:
             # are in seconds, negative are the negative of sim frames.  Zero
             # registers but does not schedule a callback for time.
             self.FlightLoopCB = self.FlightLoopCallback
-            XPLMRegisterFlightLoopCallback(self, self.FlightLoopCB, 1.0, 0)
+            XPLMRegisterFlightLoopCallback(self.FlightLoopCB, 1.0, 0)
             return self.Name, self.Sig, self.Desc
 
         def XPluginStop(self):
             # Unregister the callback.
-            XPLMUnregisterFlightLoopCallback(self, self.FlightLoopCB, 0)
+            XPLMUnregisterFlightLoopCallback(self.FlightLoopCB, 0)
             self.OutputFile.close()
 
         def XPluginEnable(self):
