@@ -24,7 +24,7 @@ import threading
 import socket
 import os
 
-OutputFile = open(os.path.join(XPLMGetSystemPath(),'Resources','plugins','PythonScripts','XTCPgps.txt'), 'w')
+OutputFile = open(os.path.join(XPLMGetSystemPath(),'Resources','plugins','PythonPlugins','XTCPgps.txt'), 'w')
 
 def cksum(sentence):
     """calculates checksum for NMEA sentences"""
@@ -62,8 +62,10 @@ class SocketPlugin(object):
         if not self.connected:
             self.connect()
         try:
-            self.s.send(data)
+            self.s.send(data.encode())
         except:
+            OutputFile.write("could not send data\n")
+            OutputFile.flush()
             self.connected = False
             self.s.close()
 
